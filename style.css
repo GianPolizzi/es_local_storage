@@ -9,7 +9,34 @@
 }
 
 #contatore-contatti {
-    background-color: green;
+    background-color: rgb(30, 189, 30);
     border: 1px solid black;
-    border-radius: 10px;
+    border-radius: 5px;
+}
+
+.cf {
+    color: black;
+    background-color: rgb(150, 222, 135);
+    padding: 10px;
+    font-weight: 800;
+    border-radius: 5px;
+}
+
+ul#myList li:hover {
+    background-color: rgb(165, 199, 243);
+    
+}
+
+ul#myListSearch li:hover {
+    background-color: rgb(165, 199, 243);
+}
+
+#myList {
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#myListSearch {
+    cursor: pointer;
+    border-radius: 5px;
 }

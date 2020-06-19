@@ -7,8 +7,11 @@
 
         <!-- BOOTSTRAP CSS-->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" href="font-awesome.min.css">
         <link rel="stylesheet" href="style.css">
+
         <script src="index.js"></script>
+        
 
         <title>Anagrafica</title>
     </head>
@@ -21,17 +24,17 @@
         <div class="container" id="primary-content">
             <div class="row">
                 <div class="col-12 text-center py-3">
-                    <h1>La mia prima App</h1>
+                    <h1>Anagrafica</h1>
                 </div>
             </div>
 
-            <!-- Formo inserimento dati -->
+            <!-- Form inserimento dati -->
             <div class="row">
                 <!-- Smartphone: 12 colonne in 1-->
                 <!-- Desktop: 12 colonne in 3 parti -->
 
                 <!-- Prima colonna -->
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-lg-4">
                     <p class="h3 text-center">Inserimento</p>
                     
                         <div class="form-group">
@@ -53,13 +56,13 @@
                 </div>
                 <br>
                 <!-- Seconda colonna -->
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-lg-4">
                     <p class="h3 text-center">Lista contatti:
                         <span id="contatore-contatti">
                         </span>
                     </p>
-                    <div class="column">
-                        <i class="fas fa-trash-alt"></i>
+                    <div id="contatti">
+                        <br>
                     </div>
                     <ul id="utenti">
 
@@ -67,11 +70,14 @@
                 </div>
                 <br>
                 <!-- Terza colonna -->
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-lg-4">
                     <p class="h3 text-center">Cerca utente</p>
                     <div class="form-group">
                         <label>Inserisci codice fiscale</label>
-                        <input type="text" class="form-control" id="searchforcf">
+                        <!-- Intercetto con onkeyup l'input di un qualunque tasto da tastiera -->
+                        <input type="text" class="form-control" id="searchCF" onkeyup="searchPersona()">
+                    </div>
+                    <div id="risultatiRicerca">
                     </div>
                     <br>
                     

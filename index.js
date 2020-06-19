@@ -18,12 +18,13 @@ window.onload = () => {
         let datiStore = JSON.parse(window.localStorage.getItem('utenti'))
         //Inizializzo l'anagrafica con i dati presenti nel Local Storage
         anagrafica = datiStore;
-        console.log('Start: ho preso la stringa del Local Storage');
+        console.log('START: ho preso la stringa del Local Storage');
         updateCounter();
-        //readStorage();
+        aggiornaListaContatti();
     } 
     //Inizializzo il contatore a zero
     updateCounter();
+    aggiornaListaContatti();
 }
 
 //Aggiorno il contatore degli utenti
@@ -46,9 +47,10 @@ function salvaDatiStorage(n,c,cf){
     let p = new Persona(n, c, cf);
     anagrafica.push(p);
     window.localStorage.setItem('utenti', JSON.stringify(anagrafica));
-    alert('Utente inserito!');
+
     azzeraForm();
     updateCounter();
+    aggiornaListaContatti();
     //Rimuovo la classe 'erroreCF' dall'elemento 'cf' (Tolgo il colore rosso dal bordo della casella CF)
     document.getElementById('cf').classList.remove('erroreCF');
     
@@ -57,7 +59,7 @@ function salvaDatiStorage(n,c,cf){
 
 //Prelevo i dati dal form di contatto e li inserisco nello Storage (Chiave-Valore)
 function insertStorage(){
-    //Collegare le variabili JS all'HTML
+    //Collegare le variabili JS all'HTML: Preleva i dati dall'input
     let nomeInput = document.getElementById('nome').value;
     let cognomeInput = document.getElementById('cognome').value;
     let cfInput = document.getElementById('cf').value;
@@ -73,13 +75,13 @@ function insertStorage(){
     else{
         //Se c'è almeno una persona nell'array anagrafica
         if(anagrafica.length > 0){
-            //Controllo che all'interno dell'array non ci sia un caso di omonimia (stesso codice fiscale)
+            //Controllo che all'interno dell'array non ci sia un caso di omonimia (stesso CF)
             
-            //Arrow function: Ciclo for-each
+            //Arrow function: Ciclo for-each (Stiamo ciclando anagrafica)
             anagrafica.forEach((p) => {
                 if(p.codfis == cfInput){
                     trovato = true;
-                    //Aggiungo la classe 'erroreCF' all'elemento 'cf' (Metto il colore rosso nel bordo della casella del CF)
+                    //Aggiungo alla class="cf" la class='erroreCF' (Metto il colore rosso nel bordo della casella del CF)
                     document.getElementById('cf').classList.add('erroreCF');
                     alert('ATTENZIONE: utente presente nella lista!!!');
                     azzeraForm();
@@ -91,11 +93,6 @@ function insertStorage(){
             if(!trovato){
                 salvaDatiStorage(nomeInput, cognomeInput, cfInput);
             }
-            else{
-                document.getElementById('cf').classList.add('erroreCF');
-                alert('Gia presente');
-                azzeraForm();
-            }
         }
         else{
             //Altrimenti, se l'anagrafica è vuota
@@ -106,39 +103,80 @@ function insertStorage(){
     console.log(nomeInput + " " + cognomeInput + " " + cfInput);
 }
 
-
-
-
-
 //Leggo e stampo la lista degli elementi dello Storage
-function readStorage(){
-    let datiStore = JSON.parse(window.localStorage.getItem('utenti'))
-    //Inizializzo l'anagrafica con i dati presenti nel Local Storage
-    anagrafica = datiStore;
-    console.log('Start: ho preso la stringa del Local Storage');
-    updateCounter();
-    //Stampo ad uno ad uno gli utenti dell'anagrafica
-    for(i=1; i<=anagrafica.length; i++){
-        console.log(anagrafica.Persona);
+function aggiornaListaContatti(){
+
+    //<ul class="list-group list-group-flush" id="mylist">
+    //    <li class="list-group-item">Mario Bianchi <span class="cf">MB</span><span><i class="fa fa-trash-o text-danger float-right" aria-hidden="true" onclick="deletePersona()"></i></span></li>                
+    //</ul>
+
+    //Sto creando il codice che c'è sopra
+    let ul = document.createElement('ul');                //Creo <ul>
+    ul.classList.add('list-group', 'list-group-flush');   //aggiungo ad ul class="list-group list-group-flus"
+    ul.id = 'myList';                                     //aggiungo ad ul id="myList"
+    //Creo <li> vuoto
+    let tagLi = '';
+    //Inizio a ciclare anagrafica
+    anagrafica.forEach((ele) => {
+        //Template Literal
+        tagLi += `<li class="list-group-item">${ele.nome} ${ele.cognome} <span class="cf">${ele.codfis}</span><span><i class="fa fa-trash-o text-danger float-right" aria-hidden="true" onclick="deletePersona('${ele.codfis}')"></i></span></li>`;
+    });
+
+    document.getElementById('contatti').appendChild(ul);
+    document.getElementById('myList').innerHTML = tagLi;
+}
+
+//Visualizza contatto
+function visualizzaContatto(cf){
+    if(cf != undefined && cf != ''){
+        anagrafica.forEach((ele) => {
+            if(ele.codfis == cf){
+                let ul = document.createElement('ul');
+                ul.classList.add('list-group', 'list-group-flush');
+                ul.id = 'myListSearch';
+                let tagLi = '';
+                document.getElementById('risultatiRicerca').appendChild(ul);
+                //Template Literal
+                tagLi += `<li class="list-group-item">${ele.nome} ${ele.cognome} <span class="cf">${ele.codfis}</span><span><i class="fa fa-trash-o text-danger float-right" aria-hidden="true" onclick="deletePersona('${ele.codfis}')"></i></span></li>`;
+                document.getElementById('myListSearch').innerHTML = tagLi;
+                return;
+            }
+            
+        });
     }
-
-        anagrafica.getElementById()
-    
-    //Inizializzo il contatore a zero
-    updateCounter();
-
+    else{
+        document.getElementById('myListSearch').remove();
+        document.getElementById('searchCF').value;
+    }
 }
 
 //Creo la funzione per cercare un utente a partire dal suo CF
-function searcPersona(){
-
-    //Scorro l'array
-
-    //Trovo l'elemento
-
-    //Stampo a schermo l'elemento
+function searchPersona(){
+    let cf = document.getElementById('searchCF').value;
+    visualizzaContatto(cf);
 }
 
-function deletePersona(){
-
+function deletePersona(cf){
+    //Creo una confirm per far spuntare una finstra del browser che mi faccia una domanda boolean
+    let res = confirm(`Sei sicuro di voler eliminare il contatto avente CF: ${cf} ?`);
+    if (res){
+        
+        let posPersona = -1;
+        anagrafica.forEach((ele, index) => {
+            if(ele.codfis == cf){
+                //Conservo l'indice della persona da eliminare
+                posPersona = index;
+                return;
+            }
+        });
+        //Se l'elemento è stato trovato...
+        if(posPersona != -1){
+            //Splice(posPersona,1): elimina a partire da posPersona un solo elemento
+            anagrafica.splice(posPersona, 1);
+            window.localStorage.setItem('utenti', JSON.stringify(anagrafica));
+            updateCounter();
+            aggiornaListaContatti();
+            visualizzaContatto();
+        }
+    }  
 }
